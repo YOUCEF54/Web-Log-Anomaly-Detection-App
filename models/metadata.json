@@ -1,0 +1,23 @@
+{
+  "models": {
+    "isolation_forest": {
+      "path": "C:\\Users\\ok\\Desktop\\M2\\cybersecurity\\Web-Log-Anomaly-Detection\\models\\iso_model.joblib",
+      "contamination": 0.05,
+      "n_estimators": 50
+    },
+    "random_forest": {
+      "path": "C:\\Users\\ok\\Desktop\\M2\\cybersecurity\\Web-Log-Anomaly-Detection\\models\\rf_model.joblib",
+      "n_estimators": 50
+    }
+  },
+  "features": [
+    "url_length",
+    "param_count",
+    "has_special_chars",
+    "has_sql",
+    "method_encoded",
+    "payload_length",
+    "url_entropy"
+  ],
+  "samples": 123042
+}
