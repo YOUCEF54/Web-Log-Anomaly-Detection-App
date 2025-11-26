@@ -1,13 +1,10 @@
 # src/features.py
-"""
-Simplified feature extractor (7 features) — robust to NaN
-"""
 import pandas as pd
 import math
 from collections import Counter
-import re
 
 SQL_KEYWORDS = ["select", "union", "insert", "drop", "--", "'", '"', "or 1=1"]
+
 
 def entropy(text: str) -> float:
     if not text:
@@ -16,21 +13,22 @@ def entropy(text: str) -> float:
     L = len(text)
     return -sum((c / L) * math.log2(c / L) for c in freq.values())
 
+
 def build_features(df: pd.DataFrame):
     """
-    Input: DataFrame containing columns like 'url', 'method', 'body', 'user_agent', ...
+    Input: DataFrame with columns like url, method, body, user_agent...
     Output: (X_df, feature_cols)
     """
     df = df.copy()
 
-    # ensure required columns exist
+    # Ensure required columns exist
     for col in ["url", "method", "body", "user_agent", "cookie", "content_type", "content_length", "accept"]:
         if col not in df.columns:
             df[col] = ""
 
-    # normalize types
+    # Normalize types
     df["url"] = df["url"].fillna("").astype(str)
-    df["method"] = df["method"].fillna("").astype(str)
+    df["method"] = df["method"].fillna("").astype(str).str.upper()
     df["body"] = df["body"].fillna("").astype(str)
     df["user_agent"] = df["user_agent"].fillna("").astype(str)
     df["cookie"] = df["cookie"].fillna("").astype(str)
@@ -38,7 +36,7 @@ def build_features(df: pd.DataFrame):
     df["content_length"] = df["content_length"].fillna("0").astype(str)
     df["accept"] = df["accept"].fillna("").astype(str)
 
-    # Simplified 7 features
+    # Features
     df["url_length"] = df["url"].apply(len)
     df["param_count"] = df["url"].str.count("&").fillna(0).astype(int)
     df["has_special_chars"] = df["url"].str.contains(r"[<>'\"%;()]", regex=True, na=False).astype(int)
@@ -58,7 +56,6 @@ def build_features(df: pd.DataFrame):
     ]
 
     X = df[feature_cols].copy()
-    # ensure numeric dtype
     X = X.apply(pd.to_numeric, errors="coerce").fillna(0)
 
     return X, feature_cols

@@ -1,0 +1,82 @@
+[
+  {
+    "method": "GET",
+    "url": "/tienda1/index.jsp",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": ""
+  },
+  {
+    "method": "GET",
+    "url": "/tienda1/publico/anadir.jsp?id=3&nombre=Vino+Rioja&precio=12",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": ""
+  },
+  {
+    "method": "POST",
+    "url": "/tienda1/publico/anadir.jsp",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": "cantidad=1&id=3"
+  },
+  {
+    "method": "GET",
+    "url": "/tienda1/publico/autenticar.jsp?modo=entrar&login=admin&password=admin",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": ""
+  },
+  {
+    "method": "GET",
+    "url": "/tienda1/publico/buscar.jsp?keywords=<script>alert('xss')</script>",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": ""
+  },
+  {
+    "method": "POST",
+    "url": "/tienda1/publico/comprar.jsp",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": "id=3&cantidad=1&metodo=tarjeta"
+  },
+  {
+    "method": "GET",
+    "url": "/tienda1/publico/buscar.jsp?keywords=' OR '1'='1",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": ""
+  },
+  {
+    "method": "GET",
+    "url": "/tienda1/publico/verCarrito.jsp",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": ""
+  },
+  {
+    "method": "POST",
+    "url": "/tienda1/publico/registro.jsp",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": "usuario=imane&email=imane@test.com&pass=123456"
+  },
+  {
+    "method": "GET",
+    "url": "/tienda1/publico/buscar.jsp?keywords=../../etc/passwd",
+    "protocol": "HTTP/1.1",
+    "host": "localhost:8080",
+    "user_agent": "Mozilla/5.0",
+    "body": ""
+  }
+]

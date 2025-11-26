@@ -1,15 +1,8 @@
-"""
-src/threat_score.py
-Safe threat scoring module.
-✔ Prevents 'int has no attribute fillna'
-✔ Robust to missing columns
-✔ Works with single-row df
-"""
-
+# src/threat_score.py
 import pandas as pd
 import numpy as np
 
-# weights
+# weights (tunable)
 W_RF = 0.30
 W_ISO = 0.30
 W_SIGNATURE = 0.25
@@ -17,53 +10,50 @@ W_ENTROPY = 0.10
 W_PAYLOAD = 0.05
 
 
-def _ensure_series(value):
-    """Convert scalar to 1-row Series → prevents fillna() crash."""
-    if isinstance(value, pd.Series):
-        return value
-    return pd.Series([value])
-
-
 def _norm(series, eps=1e-6):
-    series = _ensure_series(series).astype(float).fillna(0)
-    mn, mx = series.min(), series.max()
-    return (series - mn) / ((mx - mn) + eps)
+    if series.empty:
+        return series
+    mn = series.min()
+    mx = series.max()
+    denom = (mx - mn) + eps
+    return (series - mn) / denom
 
 
 def compute_threat_score(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Expects df to have: RF_Prediction (0/1), ISO_Prediction (0/1), Attack_Type, url_entropy, payload_length
+    Returns df with Threat_Score and Threat_Level
+    """
     df = df.copy()
 
-    # strict casting
-    df["RF_Prediction"] = _ensure_series(df.get("RF_Prediction", 0)).astype(int)
-    df["ISO_Prediction"] = _ensure_series(df.get("ISO_Prediction", 0)).astype(int)
-
+    df["RF_Prediction"] = df.get("RF_Prediction", 0).fillna(0).astype(int)
+    df["ISO_Prediction"] = df.get("ISO_Prediction", 0).fillna(0).astype(int)
     df["Attack_Type"] = df.get("Attack_Type", None)
+    df["url_entropy"] = df.get("url_entropy", 0).fillna(0).astype(float)
+    df["payload_length"] = df.get("payload_length", 0).fillna(0).astype(float)
 
-    df["url_entropy"] = _ensure_series(df.get("url_entropy", 0)).astype(float)
-    df["payload_length"] = _ensure_series(df.get("payload_length", 0)).astype(float)
+    df["signature_flag"] = (~df["Attack_Type"].isna()) & (df["Attack_Type"] != "")
+    sig = df["signature_flag"].astype(int)
 
-    # signature flag
-    sig = df["Attack_Type"].notna().astype(int)
-
-    # normalize
     ent_norm = _norm(df["url_entropy"])
     payload_norm = _norm(df["payload_length"])
 
-    score_cont = (
-        W_RF * df["RF_Prediction"]
-        + W_ISO * df["ISO_Prediction"]
-        + W_SIGNATURE * sig
-        + W_ENTROPY * ent_norm
-        + W_PAYLOAD * payload_norm
-    )
+    score_cont = (W_RF * df["RF_Prediction"]
+                  + W_ISO * df["ISO_Prediction"]
+                  + W_SIGNATURE * sig
+                  + W_ENTROPY * ent_norm
+                  + W_PAYLOAD * payload_norm)
 
     df["Threat_Score"] = (score_cont.clip(0, 1) * 100).round(1)
 
-    def level(v):
-        if v >= 70: return "High"
-        if v >= 35: return "Medium"
+    def level(s):
+        if s >= 70:
+            return "High"
+        if s >= 35:
+            return "Medium"
         return "Low"
 
     df["Threat_Level"] = df["Threat_Score"].apply(level)
 
+    df.drop(columns=["signature_flag"], inplace=True, errors="ignore")
     return df

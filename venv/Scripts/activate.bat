@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\SAMSUNG\Desktop\WebLogAnomalyDetection\venv
+set VIRTUAL_ENV=C:\Users\ok\Desktop\Nouveau dossier\Web-Log-Anomaly-Detection-App\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

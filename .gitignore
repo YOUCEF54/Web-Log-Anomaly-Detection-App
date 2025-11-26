@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.joblib
+*.log
+.vscode
+*.pyc
+data/csic_2010/

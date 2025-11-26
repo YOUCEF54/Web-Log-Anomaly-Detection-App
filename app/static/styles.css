@@ -1,0 +1,45 @@
+/* ---- Global theme ---- */
+:root {
+    --bg: #0e1117;
+    --card-bg: #161b22;
+    --text: #e6edf3;
+    --accent: #2f81f7;
+    --danger: #ff4d4f;
+    --warning: #f5a623;
+}
+
+body {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+}
+
+/* ---- Titles ---- */
+h1, h2, h3 {
+    color: var(--accent) !important;
+    font-weight: 700 !important;
+}
+
+/* ---- Cards ---- */
+.block-container {
+    padding-top: 1rem !important;
+}
+
+.stCard {
+    background: var(--card-bg) !important;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+/* ---- Buttons ---- */
+.stButton>button {
+    background-color: var(--accent) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    border: none !important;
+}
+
+/* ---- Tables ---- */
+table {
+    color: var(--text) !important;
+}
